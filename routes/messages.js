@@ -60,14 +60,18 @@ router.get('/allMessages', (req, res) =>{
 })
 
 router.delete('/deleteMessage/:messageId', (req, res) => {
-        Message.deleteOne({ _id: req.params.messageId }).then( data => {
-            //console.log(typeof data.deletedCount)
-            if(data.deletedCount === 1){
-                res.json({result: true, text: 'message deleted'})
-            } else {
-                res.json({result: false, error : 'an error was accured'})
-            }
-            // }data.deletedCount = '1'
-        })
-})
+  Message.deleteOne({ _id: req.params.messageId })
+    .then(data => {
+      if (data.deletedCount === 1) {
+        res.json({ result: true, text: 'Message deleted' });
+      } else {
+        res.status(404).json({ result: false, error: 'Message not found' });
+      }
+    })
+    .catch(error => {
+      console.error(`Error deleting message with ID ${req.params.messageId}:`, error);
+      res.status(500).json({ result: false, error: 'Server error' });
+    });
+});
+
 module.exports = router;
