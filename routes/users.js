@@ -7,7 +7,7 @@ const { checkBody } = require('../modules/checkBody');
 
 /* GET users listing. */
 router.post('/signup', function(req, res, next) {
-  if (!checkBody(req.body, ['firstName', 'username', 'password'])) {
+  if (!checkBody(req.body, ['firstname', 'username', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
@@ -17,14 +17,14 @@ router.post('/signup', function(req, res, next) {
       const hash = bcrypt.hashSync(req.body.password, 10);
 
       const newUser = new User({
-        firstname: req.body.firstName,
+        firstname: req.body.firstname,
         username: req.body.username,
         password: hash,
         token: uid2(32),
       })
 
       newUser.save().then(newData => {
-        res.json({ result: true, token: newData.token, firstName: newData.firstname, username: newData.username, });
+        res.json({ result: true, token: newData.token, firstname: newData.firstname, username: newData.username, });
       });
     } else {
       res.json({result: false, error: 'username already took'})
@@ -40,7 +40,7 @@ router.post('/signin', (req,res) => {
   
   User.findOne({username: req.body.username}).then(data => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, token: data.token, username: data.username, firstName: data.firstname });
+      res.json({ result: true, token: data.token, username: data.username, firstname: data.firstname });
     } else {
       res.json({ result: false, error: 'User not found or wrong password' });
     }

@@ -39,6 +39,7 @@ router.post('/addMessage/:token', (req, res) => {
 router.get('/allMessages', (req, res) =>{
     Message.find()
     .populate('user')
+    .sort({ date: 'desc' }) // Sort by date in descending order
     .then(data => {
         console.log(data.length)
         let message = []
@@ -60,7 +61,7 @@ router.get('/allMessages', (req, res) =>{
 
 router.delete('/deleteMessage/:messageId', (req, res) => {
         Message.deleteOne({ _id: req.params.messageId }).then( data => {
-            console.log(typeof data.deletedCount)
+            //console.log(typeof data.deletedCount)
             if(data.deletedCount === 1){
                 res.json({result: true, text: 'message deleted'})
             } else {
