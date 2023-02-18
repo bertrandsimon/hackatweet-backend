@@ -67,7 +67,27 @@ router.get('/allMessagesByUser/:userId', (req, res) => {
     .populate('user')
     .sort({ date: 'desc' }) 
     .then ( data => {
-        res.json({allMessages: data })
+        let message = []
+
+        for (let i=0; i<data.length; i++){
+
+                
+            message.push({
+                username: data[i].user.username,
+                firstname: data[i].user.firstname,
+                content: data[i].content,
+                date: data[i].date,
+                messageId: data[i]._id,
+                likes : data[i].likes,
+                userId : data[i].user._id,
+            })
+        }
+
+      
+
+
+  
+            res.json({allMessages: message })
     })
 })
 
