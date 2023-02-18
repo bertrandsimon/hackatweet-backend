@@ -63,6 +63,22 @@ router.get('/allMessages', (req, res) =>{
     })
 })
 
+router.get('/allHashtags', (req, res) =>{
+    Message.find({ hashtag: { $exists: true } })
+    .populate('user')
+    .sort({ date: 'desc' }) // Sort by date in descending order
+    .then(data => {
+        let hashtags = []
+            for (let i=0; i<data.length; i++){
+                hashtags.push({
+                    hashtag: data[i].hashtag,
+                })
+            }
+
+        res.json({allHashtags: hashtags })
+    })
+})
+
 
 router.get('/allMessagesByUser/:userId', (req, res) => {
     Message.find({user: req.params.userId  })
@@ -82,6 +98,7 @@ router.get('/allMessagesByUser/:userId', (req, res) => {
                 messageId: data[i]._id,
                 likes : data[i].likes,
                 userId : data[i].user._id,
+                hashtag: data[i].hashtag,
             })
         }
 
