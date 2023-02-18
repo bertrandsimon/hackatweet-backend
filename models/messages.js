@@ -5,6 +5,7 @@ const messageSchema = mongoose.Schema ({
     content: String,
     date: Date,
     likes: Number,
+    hashtag: String,
 })
 
 const Message = mongoose.model('messages', messageSchema);

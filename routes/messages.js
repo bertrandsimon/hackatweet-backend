@@ -18,6 +18,7 @@ router.post('/addMessage/:token', (req, res) => {
                     content: req.body.message,
                     date: new Date,
                     likes: 0,
+                    hashtag: req.body.hashtag,
                 })
 
                 newMessage.save()
@@ -55,6 +56,7 @@ router.get('/allMessages', (req, res) =>{
                     messageId: data[i]._id,
                     likes : data[i].likes,
                     userId : data[i].user._id,
+                    hashtag: data[i].hashtag,
                 })
             }
         res.json({allMessages: message })
