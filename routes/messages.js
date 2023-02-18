@@ -17,6 +17,7 @@ router.post('/addMessage/:token', (req, res) => {
                     user: data._id,
                     content: req.body.message,
                     date: new Date,
+                    likes: 0,
                 })
 
                 newMessage.save()
@@ -53,6 +54,7 @@ router.get('/allMessages', (req, res) =>{
                     date: data[i].date,
                     messageId: data[i]._id,
                     likes : data[i].likes,
+                    userId : data[i].user._id,
                 })
             }
         res.json({allMessages: message })
@@ -60,36 +62,36 @@ router.get('/allMessages', (req, res) =>{
 })
 
 
+router.get('/allMessagesByUser/:userId', (req, res) => {
+    Message.find({user: req.params.userId  })
+    //.populate('user')
+    .sort({ date: 'desc' }) 
+    .then ( data => {
+        
+        res.json({allMessagesfromUser: data })
+    })
+})
+
+
 router.get('/likeMessage/:messageId', (req, res) => {
-
-    //res.json({routeCalled: req.params.messageId  })
-    // Message.findOne({ _id: req.params.messageId })
-    //   .then(data => {
-    //     console.log(data)
-    //     res.json({likedMessage: 'liked', _id: req.params.messageId, data: data })
-    //   })
-
+ 
     Message.updateOne( {_id: req.params.messageId}, {$inc: {likes: 1}} )
     .then (() => {
         Message.findOne({_id: req.params.messageId})
         .then( data => {console.log(data)})
     })
     
-    
   });
 
-  
-	// db.updateOne(
-    //     { _id: articleId },
-    //     { stock: newStock }     
-    // ).then(() => {
+  router.get('/unlikeMessage/:messageId', (req, res) => {
  
-    //     db.find().then(data => {
-    //       console.log('updateArticleStock OK');
-		  
-    //     });
-       
-    //    });
+    Message.updateOne( {_id: req.params.messageId}, {$inc: {likes: -1}} )
+    .then (() => {
+        Message.findOne({_id: req.params.messageId})
+        .then( data => {console.log(data)})
+    })
+    
+  });
 
 
 router.delete('/deleteMessage/:messageId', (req, res) => {
