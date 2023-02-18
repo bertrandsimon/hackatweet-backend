@@ -64,11 +64,10 @@ router.get('/allMessages', (req, res) =>{
 
 router.get('/allMessagesByUser/:userId', (req, res) => {
     Message.find({user: req.params.userId  })
-    //.populate('user')
+    .populate('user')
     .sort({ date: 'desc' }) 
     .then ( data => {
-        
-        res.json({allMessagesfromUser: data })
+        res.json({allMessages: data })
     })
 })
 
