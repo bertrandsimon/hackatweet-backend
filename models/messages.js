@@ -4,6 +4,7 @@ const messageSchema = mongoose.Schema ({
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
     content: String,
     date: Date,
+    likes: Number,
 })
 
 const Message = mongoose.model('messages', messageSchema);

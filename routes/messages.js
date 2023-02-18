@@ -31,17 +31,17 @@ router.post('/addMessage/:token', (req, res) => {
             } else {
                 res.json({result: false, error: 'You are not connected'})
             }
-        })
-        
-
+        })       
 })
+
+
 
 router.get('/allMessages', (req, res) =>{
     Message.find()
     .populate('user')
     .sort({ date: 'desc' }) // Sort by date in descending order
     .then(data => {
-        console.log(data.length)
+        //console.log(data.length)
         let message = []
             for (let i=0; i<data.length; i++){
 
@@ -52,12 +52,45 @@ router.get('/allMessages', (req, res) =>{
                     content: data[i].content,
                     date: data[i].date,
                     messageId: data[i]._id,
-                
+                    likes : data[i].likes,
                 })
             }
         res.json({allMessages: message })
     })
 })
+
+
+router.get('/likeMessage/:messageId', (req, res) => {
+
+    //res.json({routeCalled: req.params.messageId  })
+    // Message.findOne({ _id: req.params.messageId })
+    //   .then(data => {
+    //     console.log(data)
+    //     res.json({likedMessage: 'liked', _id: req.params.messageId, data: data })
+    //   })
+
+    Message.updateOne( {_id: req.params.messageId}, {$inc: {likes: 1}} )
+    .then (() => {
+        Message.findOne({_id: req.params.messageId})
+        .then( data => {console.log(data)})
+    })
+    
+    
+  });
+
+  
+	// db.updateOne(
+    //     { _id: articleId },
+    //     { stock: newStock }     
+    // ).then(() => {
+ 
+    //     db.find().then(data => {
+    //       console.log('updateArticleStock OK');
+		  
+    //     });
+       
+    //    });
+
 
 router.delete('/deleteMessage/:messageId', (req, res) => {
   Message.deleteOne({ _id: req.params.messageId })
